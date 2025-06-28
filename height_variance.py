@@ -18,8 +18,8 @@ GRID_HEIGHT = 200
 SCALE_FACTOR = 10
 GRID_OFFSET = 100
 KERNEL_SIZE = 7
-
-
+    
+Z_HEIGHT_THRESHOLD = 0.3
 VARIANCE_THRESHOLD = 0.007
 
 class CloudProcessor():
@@ -68,7 +68,7 @@ class CloudProcessor():
     
 
     def height_variance(self, z_block):
-        valid = z_block[z_block != -100]  # Ignore empty grid cells
+        valid = z_block[z_block > -2]  # very -ve Z vals
         if len(valid) == 0:
             return np.inf  # No good data
         return np.var(valid)  # Variance of heights
@@ -91,8 +91,8 @@ class CloudProcessor():
                 xi, yi = ((i - GRID_OFFSET) / SCALE_FACTOR, (j - GRID_OFFSET) / SCALE_FACTOR)
 
                 
-                #if var_map[i, j] > VARIANCE_THRESHOLD:                         ### uncomment for using the variance method
-                 #   continue
+                if var_map[i, j] > VARIANCE_THRESHOLD or abs(seld.z_array) > Z_HEIGHT_THRESHOL:            ### uncomment for using the variance method
+                    continue
 
                 self.safe_spots.append([xi, yi, zi])
         
